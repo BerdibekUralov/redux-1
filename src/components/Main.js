@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../redux/actions';
 
-export default function Main({caunter, inc, dec, random}) {
+function Main({caunter, inc, dec, random}) {
   return (
     <div>
       <h1>Counter: {caunter}</h1>
@@ -11,5 +13,10 @@ export default function Main({caunter, inc, dec, random}) {
   )
 }
 
+const mapStateToProps = (state) => {
+  return{
+    caunter: state.value
+  }
+}
 
-
+export default connect(mapStateToProps, actions)(Main)
