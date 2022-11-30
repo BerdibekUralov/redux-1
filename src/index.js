@@ -1,49 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createStore } from 'redux'
-
-const initailState = {value: 0}
-
-const reducer = (state = initailState, action) => {
-  switch (action.type) {
-    case "INCREMENT":
-      return {
-        ...state,
-        value: state.value + 1
-      }
-    case "DECREMENT":
-      return {
-        ...state,
-        value: state.value - 1
-      }
-    case "RANDOM":
-      return {
-        ...state,
-        value: state.value * action.payload
-      }
-    default:
-      return state;
-  }
-}
+import { createStore, bindActionCreators } from 'redux'
+import * as actions from './redux/actions';
+import reducer from './redux/reducers';
 
 const store = createStore(reducer)
+const {dispatch, getState, subscribe} = store
 
-const update = () => document.getElementById('counter').textContent = store.getState().value
-store.subscribe(update)
+subscribe(() => document.getElementById('counter').textContent = getState().value)
 
-const dec = () => ({type: 'DECREMENT'})
-const inc = () => ({type: 'INCREMENT'})
-const random = (num) => ({type: 'RANDOM', payload: num})
+const {inc, dec, random} = bindActionCreators(actions, dispatch)
 
-document.getElementById('increment').addEventListener('click', () => {
-  store.dispatch(inc())
-})
-document.getElementById('decrement').addEventListener('click', () => {
-  store.dispatch(dec())
-})
+document.getElementById('increment').addEventListener('click', inc)
+document.getElementById('decrement').addEventListener('click', dec)
 document.getElementById('random').addEventListener('click', () => {
   const randomValue = Math.floor(Math.random() * 10)
-  store.dispatch(random(randomValue))
+  random(randomValue)
 })
 
 document.getElementById('counter').textContent()
@@ -52,7 +24,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <>
-      {/* <h3 style={{textAlign: 'center'}}>Hello Redux </h3> */}
+      
     </>
   </React.StrictMode>
 );
